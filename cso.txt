@@ -1,0 +1,5 @@
+['Zahid', 18, 'Lotus', 'bmw', 320]
+['Ali', 19, 'Lotus', 'merc', 300]
+['Gaindu', 20, 'Torus', 'Toyota', 600]
+['Senuda', 19, 'Taitus', 'Lokas', 900]
+['Kavindu', 19, 'Tourus', 'Toyota', 550]

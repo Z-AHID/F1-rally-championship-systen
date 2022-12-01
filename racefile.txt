@@ -1,0 +1,20 @@
+_____________________
+location---> Holjes
+Date---> 2023-10-03
+
+Position Name Points
+[1, 'Ali', 10]
+[2, 'Senuda', 7]
+[3, 'Gaindu', 5]
+[4, 'Zahid', 0]
+_____________________
+_____________________
+location---> Riga
+Date---> 2023-05-03
+
+Position Name Points
+[1, 'Ali', 10]
+[2, 'Zahid', 7]
+[3, 'Senuda', 5]
+[4, 'Gaindu', 0]
+_____________________
