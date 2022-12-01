@@ -2,7 +2,7 @@
 
 #defining a function to display the main menu
 def main_menu():
-    print(""" \u001b[33m
+    print("""
     1. Type  ADD  for adding driver details
     2. Type  DDD  for deleting
     3. Type  UDD  for updating driver details
@@ -21,22 +21,22 @@ def add_driver_function():
 
     while True:
         try:
-            d_age = input("\u001b[33mEnter the age of the driver:")
+            d_age = input("Enter the age of the driver:")
             d_age = int(d_age)
             break
         except ValueError:
-            print("\u001b[31mInvalid Entry!!! PLease enter a number value!")
+            print("Invalid Entry!!! PLease enter a number value!")
 
     d_team = input("Enter the team name of the driver:")
     d_car = input("Enter the name of the car:")
 
     while True:
         try:
-            d_points = input("\u001b[33mEnter current points of the driver:")
+            d_points = input("Enter current points of the driver:")
             d_points = int(d_points)
             break
         except ValueError:
-            print("\u001b[31mInvalid Entry!!! PLease enter a nu`mber value!")
+            print("Invalid Entry!!! PLease enter a number value!")
 
     driver_details = [d_name, d_age, d_team, d_car, d_points]
     f = open("cso.txt","a+")
@@ -45,7 +45,7 @@ def add_driver_function():
     f.close()
     print(z)
 
-    print("\u001b[32mDriver details has been added succesfully")
+    print("Driver details has been added succesfully")
 
 
 
@@ -64,7 +64,7 @@ def delete_driver_function():
             f1.write(str(line))
     f1.close()
 
-    print("\u001b[32mDriver details has been deleted successfully")
+    print("Driver details has been deleted successfully")
 
 
 
@@ -91,23 +91,23 @@ def update_driver_function():
             d_name = input("Enter the name of the driver:")
             while True:
                 try:
-                    d_age = input("\u001b[33mEnter the age of the driver:")
+                    d_age = input("Enter the age of the driver:")
                     d_age = int(d_age)
                     break
                 except ValueError:
-                    print("\u001b[31mInvalid Entry!!! PLease enter a number value!")
+                    print("Invalid Entry!!! PLease enter a number value!")
             d_team = input("Enter the driver's team:")
             d_car = input("Enter the name of the driver's car:")
             while True:
                 try:
-                    d_points = input("\u001b[33mEnter current points of the driver:")
+                    d_points = input("Enter current points of the driver:")
                     d_points = int(d_points)
                     break
                 except ValueError:
-                    print("\u001b[31mInvalid Entry!!! PLease enter a number value!")
+                    print("Invalid Entry!!! PLease enter a number value!")
             d_details = [d_name,d_age,d_team,d_car,d_points]
             f1.write(str(d_details)+ "\n")
-            print("\u001b[32mDriver details of driver", driver_name, "has been updated")
+            print("Driver details of driver", driver_name, "has been updated")
 
 
 
@@ -138,35 +138,81 @@ def random_race_function():
     import datetime
     import random
 
-    #generating a random date
-    day = random.randint(1,25)
-    month = random.randint(1,12)
-    year = random.randint(2022,2023)
-    date = datetime.date(year,month,day)
+    # implemeting lists to store name,date,location and position seperately
+    name_list = []
+    date_list = []
+    location_list = []
+    position_list = []
+    points_list = []
+
+    # this list stores the above implemented list's elements as one whole list
+    new_list = []
+
+    # generating a random date
+    day = random.randint(1, 25)
+    month = random.randint(1, 12)
+    year = random.randint(2022, 2023)
+    date = datetime.date(year, month, day)
     race_date = str(date)
 
-    #generating a random location out of given locations
+    # generating a random location out of given locations
     locations = ["Nyirad", "Holjes", "Montalegre", "Barcelona", "Riga", "Norway"]
     race_location = random.choice(locations)
 
-    #getting drivers name and entering the race details to a text file
+    # opening the file which contains champions standing order to read driver names
     csofile = open("cso.txt", "r")
     csofile_lines = csofile.readlines()
+    racefile = open("racefile.txt", "a+")
 
+    # reading and retreiving driver name from champion standing order file to be passed to a list
     for x in csofile_lines:
-        split_records = x.replace("[", "").replace("]", "").replace("\"", "").replace("'", "").replace(" ", "").replace("\n", "").split(",")
+        split_records = x.replace("[", "").replace("]", "").replace("\"", "").replace("'", "").replace(" ", "").replace(
+            "\n", "").split(",")
         driver_name = split_records[0]
-        race_details = [race_date, race_location, driver_name]
-        str_racedetails = str(race_details)
-        temprace = open("temprace.txt", "a+")
-        temprace.write(str_racedetails + "\n")
+        name_list.append(driver_name)
 
+    # using while loop to generate position
+    count = 1
+    while count <= len(csofile_lines):
+        position_list.append(count)
+        if count == 1:
+            points_list.append(10)
+        elif count == 2:
+            points_list.append(7)
+        elif count == 3:
+            points_list.append(5)
+        else:
+            points_list.append(0)
+        count += 1
+
+    # using z variable to increment the index value of the lists
+    random.shuffle(name_list)
+
+    racefile.write("_" * 21 + "\n")
+    racefile.write("location---> "+race_location+"\n")
+    racefile.write("Date---> "+race_date+"\n")
+    racefile.write(""+"\n")
+    racefile.write("Position "),racefile.write("Name "),racefile.write("Points"+"\n")
+    z = 0
+    while z < len(csofile_lines):
+        new_list = [position_list[z + 0],name_list[z + 0],points_list[z + 0]]
+        new_list_str = str(new_list)
+        print(new_list_str)
+        racefile.write(new_list_str + "\n")
+        z += 1
+    racefile.write("_"*21+"\n")
+    csofile.close()
+    racefile.close()
 
 
 #function6
 #defining a function to display the races
 def race_info_display_function():
-    print("Display race details")
+    file = open("racefile.txt","r")
+    readline = file.readlines()
+
+    print(readline)
+
 
 
 
@@ -192,7 +238,7 @@ def save_data_function():
     file.close()
     file2.close()
 
-    print("\u001b[32mCurrent data has been successfully saved")
+    print("Current data has been successfully saved")
 
 
 
@@ -200,11 +246,37 @@ def save_data_function():
 #function8
 #defining a function to load current data from text file
 def load_data_function():
-
     file = open("savefile.txt","r")
     lines  = file.readlines()
     for line in lines:
         print(line)
+
+    option = input("Do you want to continue (y/n):")
+    if option == "y":
+        main_menu()
+        user_input = input("Choose an option from the above menu:")
+        user_input = user_input.upper()  # gives the user the ability to enter in any case
+        if user_input == "ADD":
+            add_driver_function()
+        elif user_input == "DDD":
+            delete_driver_function()
+        elif user_input == "UDD":
+            update_driver_function()
+        elif user_input == "VCT":
+            display_function()
+        elif user_input == "SRR":
+            random_race_function()
+        elif user_input == "VRL":
+            race_info_display_function()
+        elif user_input == "STF":
+            save_data_function()
+        elif user_input == "RFF":
+            load_data_function()
+        elif user_input == "ESC":
+            exit_program_function()
+    else:
+        print("Program Exited")
+        exit()
 
 
 
@@ -212,5 +284,5 @@ def load_data_function():
 #function9
 #defining a function to exit the the program
 def exit_program_function():
-    print("\u001b[32mProgram Exited")
+    print("Program Exited")
     exit()

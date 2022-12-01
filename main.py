@@ -6,7 +6,7 @@ import functions
 #while loop to iterate the menu
 while True:
     functions.main_menu()
-    user_input = input("Choose an option from the above menu (ENTER ONLY CAPITAL LETTERS FROM THE MENU):")
+    user_input = input("Choose an option from the above menu:")
     user_input = user_input.upper() #gives the user the ability to enter in any case
     if user_input == "ADD":
         functions.add_driver_function()
