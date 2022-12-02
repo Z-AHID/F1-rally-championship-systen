@@ -17,8 +17,13 @@ def main_menu():
 #function1
 #defining a function to add driver details
 def add_driver_function():
+    #opening file to enter driver details
+    f = open("cso.txt", "a+")
+
+    #getting user inputs to add driver details
     d_name = input("Enter the name of the driver:")
 
+    #handling exception when entering age, incase if user enters string value for age
     while True:
         try:
             d_age = input("Enter the age of the driver:")
@@ -30,6 +35,7 @@ def add_driver_function():
     d_team = input("Enter the team name of the driver:")
     d_car = input("Enter the name of the car:")
 
+    # handling exception when entering score, incase if user enters string value for points
     while True:
         try:
             d_points = input("Enter current points of the driver:")
@@ -38,46 +44,50 @@ def add_driver_function():
         except ValueError:
             print("Invalid Entry!!! PLease enter a number value!")
 
+    #storing all the inputs to a list and then converting the list into a string and writing it into the file
     driver_details = [d_name, d_age, d_team, d_car, d_points]
-    f = open("cso.txt","a+")
     z = str(driver_details)
     f.write(z+'\n')
     f.close()
-    print(z)
-
-    print("Driver details has been added succesfully")
-
 
 
 #function2
 #defining a function to delete driver details
 def delete_driver_function():
+    #getting name of the driver to be deleted
     driver_name = input("Enter name of driver to be deleted:")
+
+    # opening the target file and reading lines
     f = open("cso.txt", "r")
     lines = f.readlines()
     f.close()
 
+    #opening file in write mode and writing the records back except the record of the user entered driver name
     f1 = open("cso.txt", "w")
     for line in lines:
         x = line.replace("[", "").replace("]", "").replace("\"", "").replace(" ", "").replace("'", "").split(",")
         if driver_name != x[0]:
             f1.write(str(line))
     f1.close()
+    # referred from :- https://stackoverflow.com/questions/49784989/deleting-a-line-from-text-file-in-python
+    # edited by: lefft , answered by: Madhu Ancha
 
     print("Driver details has been deleted successfully")
-
 
 
 
 #function 3
 #defining a function to update driver details
 def update_driver_function():
+    #getting the name of the driver to be updated
     driver_name = input("Enter name of driver to be updated:")
-    
+
+    #opening target file and reading the lines
     f = open("cso.txt", "r")
     lines = f.readlines()
     f.close()
 
+    #opening file in write mode
     f1 = open("cso.txt", "w")
     for line in lines:
         lined = line.replace("[", "").replace("]", "").replace("\"", "").replace("'", "").replace(" ", "").split(",")
@@ -88,6 +98,7 @@ def update_driver_function():
             print("""            |Update the drivers details below| 
 |If you do not want to update please re-enter the same record| 
                 """)
+            #driver details updating happens below after user read the above displayed prompt
             d_name = input("Enter the name of the driver:")
             while True:
                 try:
@@ -107,6 +118,7 @@ def update_driver_function():
                     print("Invalid Entry!!! PLease enter a number value!")
             d_details = [d_name,d_age,d_team,d_car,d_points]
             f1.write(str(d_details)+ "\n")
+
             print("Driver details of driver", driver_name, "has been updated")
 
 
@@ -114,22 +126,64 @@ def update_driver_function():
 #function4
 #Defining a function to display champions standing order
 def points_display_function():
-    file = open("cso.txt","r")
-    score,dict1 = [],{}
+    # opening a file in read mode to read the lines in that file
+    file = open("cso.txt", "r")
     lines = file.readlines()
 
+    # two lists are implemented to append the score and driver details
+    score = []
+    driver_list = []
     for x in lines:
-        lined = x.replace("[", "").replace("]", "").replace("\"", "").replace("'", "").replace(" ", "").replace("\n","").split(",")
-        score.append(lined[4])
-        d_details = lined[0:5]
-        dict1[(lined[4])] = d_details
-    score.sort(reverse=True)
-
-    print("  Name","","    Age",""," Team","","  Car","","   Points")
-    for j in score:
-        descending = dict1.get(j)
-        print(descending)
+        lined = x.replace("[", "").replace("]", "").replace("\"", "").replace("'", "").replace(" ", "").replace("\n",
+                                                                                                                "").split(
+            ",")
+        score.append(int(lined[-1]))
+        driver_list.append(lined)
     file.close()
+
+    # manually sorting the score which was appended for the score list
+    for i in range(len(score)):
+        for j in range(i + 1, len(score)):
+
+            if score[i] < score[j]:
+                score[i], score[j] = score[j], score[i]
+    # Above sorting method Referred by:- https://stackoverflow.com/questions/11964450/order-a-list-of-numbers-without-built-in-sort-min-max-function
+    # Edited by:- Trenton McKinney, Answered by:- Bharath CY India
+
+    # implemeting a new list to store the sorted data
+    sorted_driver_list = []
+
+    # appending the above list to get sorted data in descending oreder
+    count = 0
+    for y in score:
+        for x in driver_list:
+            if int(x[-1]) == y:
+                sorted_driver_list.append(x)
+                count += 1
+
+    # opening a file and writing the sorted data list into it
+    vctfile = open("vctsortedfile.txt", "w+")
+    for k in sorted_driver_list:
+        count = len(sorted_driver_list)
+        while count <= len(sorted_driver_list):
+            vctfile.write(str(k) + "\n")
+            count += 1
+    vctfile.close()
+
+    # opening the file which contains the sorted data list and extracting the lists in it by index
+    vctfile_r = open("vctsortedfile.txt", "r")
+    sorted_lines = vctfile_r.readlines()
+
+    # displaying the championship standing table
+    print("")
+    print("      #Championship Standing Table#")
+    print("#" * 41)
+    print("# Name", "", "", "", "#", "Age", "", "", "#", "Team  #", "Car", "#", "Score #")
+    print("#" * 41)
+    for g in sorted_lines:
+        split_records = g.replace("[", "").replace("]", "").replace("\"", "").replace("'", "").replace(" ","").strip().split(",")
+        print(">", split_records[0], "|", "", split_records[1], "|", "", split_records[2], "|", "", split_records[3],"|", "", split_records[4], "<")
+    print("#" * 41)
 
 
 #function5
@@ -155,14 +209,17 @@ def random_race_function():
     date = datetime.date(year, month, day)
     race_date = str(date)
 
+
+
     # generating a random location out of given locations
     locations = ["Nyirad", "Holjes", "Montalegre", "Barcelona", "Riga", "Norway"]
     race_location = random.choice(locations)
-
-    # opening the file which contains champions standing order to read driver names
+    #opening the file which contains champions standing order to read driver names
     csofile = open("cso.txt", "r")
     csofile_lines = csofile.readlines()
     racefile = open("racefile.txt", "a+")
+    vrlfile = open("vrlfile.txt", "a+")
+
 
     # reading and retreiving driver name from champion standing order file to be passed to a list
     for x in csofile_lines:
@@ -201,17 +258,39 @@ def random_race_function():
         racefile.write(new_list_str + "\n")
         z += 1
     racefile.write("_"*21+"\n")
+
+    vrl_list = [race_date, race_location]
+    vrl_list_str = str(vrl_list)
+    vrlfile.write(vrl_list_str + "\n")
+
     csofile.close()
     racefile.close()
-
+    vrlfile.close()
 
 #function6
 #defining a function to display the races
 def race_info_display_function():
-    file = open("racefile.txt","r")
-    readline = file.readlines()
+    import datetime
 
-    print(readline)
+    file = open("vrlfile.txt", "r")
+    lines = file.readlines()
+
+    date = []
+    for x in lines:
+        split_records = x.replace("[", "").replace("]", "").replace("\'", "").replace("\"", "") \
+            .replace("\n", "").strip().split(",")
+        date.append(split_records[0])
+
+    print(date)
+    ldate = [[datetime.datetime.strptime(ts, "%Y-%m-%d") for ts in date]]
+
+    for i in range(len(date)):
+        for j in range(i + 1, len(date)):
+            if date[i] > date[j]:
+                date[i], date[j] = date[j], date[i]
+
+    for i in date:
+        print(i)
 
 
 
@@ -220,8 +299,11 @@ def race_info_display_function():
 #function7
 #defining a function to save the current data to a text file
 def save_data_function():
+    #opening file in read mode to read the lines
     file = open("cso.txt","r")
+    #opening a file to save the current data
     file2 = open("savefile.txt","w+")
+    #below variables represent the headings and wrtiting the headings for the saved file so if the user view the text file the user can recognize the records easily
     title1 = "Name"
     title2 = "Age"
     title3 = "Team"
@@ -246,11 +328,14 @@ def save_data_function():
 #function8
 #defining a function to load current data from text file
 def load_data_function():
+    #opening current data saved file in read mode to read the lines
     file = open("savefile.txt","r")
     lines  = file.readlines()
+    #displaying the saved file
     for line in lines:
         print(line)
 
+    #enabling resume capabilities to the user
     option = input("Do you want to continue (y/n):")
     if option == "y":
         main_menu()
