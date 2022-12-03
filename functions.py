@@ -14,6 +14,7 @@ def main_menu():
     9. Type  ESC  to exit the program
     """)
 
+
 #function1
 #defining a function to add driver details
 def add_driver_function():
@@ -47,7 +48,7 @@ def add_driver_function():
     #storing all the inputs to a list and then converting the list into a string and writing it into the file
     driver_details = [d_name, d_age, d_team, d_car, d_points]
     z = str(driver_details)
-    f.write(z+'\n')
+    f.write(z+"\n")
     f.close()
 
 
@@ -73,7 +74,6 @@ def delete_driver_function():
     # edited by: lefft , answered by: Madhu Ancha
 
     print("Driver details has been deleted successfully")
-
 
 
 #function 3
@@ -120,7 +120,6 @@ def update_driver_function():
             f1.write(str(d_details)+ "\n")
 
             print("Driver details of driver", driver_name, "has been updated")
-
 
 
 #function4
@@ -193,14 +192,8 @@ def random_race_function():
     import random
 
     # implemeting lists to store name,date,location and position seperately
-    name_list = []
     date_list = []
     location_list = []
-    position_list = []
-    points_list = []
-
-    # this list stores the above implemented list's elements as one whole list
-    new_list = []
 
     # generating a random date
     day = random.randint(1, 25)
@@ -209,8 +202,6 @@ def random_race_function():
     date = datetime.date(year, month, day)
     race_date = str(date)
 
-
-
     # generating a random location out of given locations
     locations = ["Nyirad", "Holjes", "Montalegre", "Barcelona", "Riga", "Norway"]
     race_location = random.choice(locations)
@@ -218,9 +209,10 @@ def random_race_function():
     csofile = open("cso.txt", "r")
     csofile_lines = csofile.readlines()
     racefile = open("racefile.txt", "a+")
-    vrlfile = open("vrlfile.txt", "a+")
+    datelocfile = open("datelocfile.txt", "a+")
 
-
+    #name list implemented to store the driver names
+    name_list = []
     # reading and retreiving driver name from champion standing order file to be passed to a list
     for x in csofile_lines:
         split_records = x.replace("[", "").replace("]", "").replace("\"", "").replace("'", "").replace(" ", "").replace(
@@ -228,6 +220,9 @@ def random_race_function():
         driver_name = split_records[0]
         name_list.append(driver_name)
 
+    #position list and points list imlplemented to store the position and points in a list
+    position_list = []
+    points_list = []
     # using while loop to generate position
     count = 1
     while count <= len(csofile_lines):
@@ -242,58 +237,86 @@ def random_race_function():
             points_list.append(0)
         count += 1
 
-    # using z variable to increment the index value of the lists
+    #shuffling the driver names
     random.shuffle(name_list)
 
+    #implementing a new list to store race data
+    new_list = []
+
+    #formatting race table in text file
     racefile.write("_" * 21 + "\n")
-    racefile.write("location---> "+race_location+"\n")
-    racefile.write("Date---> "+race_date+"\n")
-    racefile.write(""+"\n")
-    racefile.write("Position "),racefile.write("Name "),racefile.write("Points"+"\n")
+    racefile.write("location---> " + race_location + "\n")
+    racefile.write("Date---> " + race_date + "\n")
+    racefile.write("" + "\n")
+    racefile.write("Position "), racefile.write("Name "), racefile.write("Points" + "\n")
+
+    # using z variable to increase the index values of the elements inside the new list
     z = 0
     while z < len(csofile_lines):
         new_list = [position_list[z + 0],name_list[z + 0],points_list[z + 0]]
         new_list_str = str(new_list)
-        print(new_list_str)
         racefile.write(new_list_str + "\n")
         z += 1
-    racefile.write("_"*21+"\n")
+    racefile.write("_" * 21 + "\n")
 
+    #writing the date and location of the race in a seperate file to retreive later
     vrl_list = [race_date, race_location]
     vrl_list_str = str(vrl_list)
-    vrlfile.write(vrl_list_str + "\n")
+    datelocfile.write(vrl_list_str + "\n")
 
     csofile.close()
     racefile.close()
-    vrlfile.close()
+    datelocfile.close()
+
 
 #function6
 #defining a function to display the races
 def race_info_display_function():
     import datetime
 
-    file = open("vrlfile.txt", "r")
+    file = open("datelocfile.txt", "r")
     lines = file.readlines()
 
+    #implementing list to store the location and date
     date = []
+    location = []
     for x in lines:
         split_records = x.replace("[", "").replace("]", "").replace("\'", "").replace("\"", "") \
             .replace("\n", "").strip().split(",")
         date.append(split_records[0])
+        location.append(split_records[1])
 
-    print(date)
     ldate = [[datetime.datetime.strptime(ts, "%Y-%m-%d") for ts in date]]
 
+    #sorting the date in ascedning order
     for i in range(len(date)):
         for j in range(i + 1, len(date)):
             if date[i] > date[j]:
                 date[i], date[j] = date[j], date[i]
+    #above sorting method was reffered by:- https://stackoverflow.com/questions/73889704/python-sorting-date-without-using-build-in-function
+    #asked by:- j ton , edited by:- codester_09
 
+    #formatting the display table of all the races and displaying it to the user
+    print("#      Races of this championship","     #")
+    file2 = open("sortedfile.txt","w+")
     for i in date:
-        print(i)
+        file2.write(i+"\n")
+    file2.close()
 
+    sorted_date = []
+    with open("sortedfile.txt") as f:
+        sorted_date = [line.rstrip() for line in f]
+    print("Date     -->",sorted_date)
 
+    file3 = open("locationfile.txt","w+")
+    for k in location:
+        file3.write(k+"\n")
+    file3.close()
 
+    loc_list = []
+    with open("locationfile.txt") as f2:
+        loc_list = [line.rstrip() for line in f2]
+    print("Location -->",loc_list)
 
 
 #function7
@@ -321,8 +344,6 @@ def save_data_function():
     file2.close()
 
     print("Current data has been successfully saved")
-
-
 
 
 #function8
@@ -362,8 +383,6 @@ def load_data_function():
     else:
         print("Program Exited")
         exit()
-
-
 
 
 #function9

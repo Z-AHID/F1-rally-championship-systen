@@ -1,4 +1,2 @@
-['Kavindu', 17, 'Lions', 'Subaru', 320]
-['Zahid', 19, 'Lions', 'Toyota', 300]
-['Gaindu', 20, 'Lotus', 'Toyota', 600]
-['Senuda', 19, 'Fires', 'Lokas', 900]
+['Carlos Sainz', 28, 'Scuderia Ferrari', 'Ferrari', 150]
+['Nicholas Latifi', 27, 'Williams Racing', 'Mercedes', 265]
